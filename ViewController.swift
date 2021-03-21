@@ -7,18 +7,6 @@
 
 import UIKit
 
-enum Gender {
-    case male, female, unspecified
-}
-
-struct Person {
-    let name: String
-    let birthDate: Date?
-    let middleName:String?
-    let address: String?
-    let gender: Gender
-}
-
 
 class ViewController: UIViewController, UITableViewDataSource {
     
@@ -28,9 +16,10 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     private let tableView: UITableView = {
         let table = UITableView()
-        
         //Register a cell into the table
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        table.register(PersonFollowingTableViewCell.self,
+                       forCellReuseIdentifier: PersonFollowingTableViewCell.identifier
+        )
         
         return table
         
@@ -49,7 +38,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     private func configureModels(){
         let names = [
-            "Joe","Dana","Jeff","Jenny","Emmily"
+            "Joe","Dana","Jeff","Jenny","Emmily","Adonis"
         ]
         
         for name in names {
@@ -64,11 +53,14 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = models[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = model.name
+       guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: PersonFollowingTableViewCell.identifier,
+                for: indexPath) as? PersonFollowingTableViewCell else {
+        return UITableViewCell()
+       }
+        //cell.textLabel?.text = model.name
+        cell.configure(with: PersonFollowingTableViewCellViewModel(with: model))
         return cell
     }
-
-
 }
 
